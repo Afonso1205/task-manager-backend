@@ -9,8 +9,8 @@ namespace AgendaTarefas.Models
     public class TaskItem
     {
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public required string Id { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
         public required string Title { get; set; }

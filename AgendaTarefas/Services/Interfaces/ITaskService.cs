@@ -7,12 +7,10 @@ namespace AgendaTarefas.Services.Interfaces
 {
     public interface ITaskService
     {
-        Task<IEnumerable<TaskItem>> GetAllTasksAsync();
+        Task<IEnumerable<TaskItem>> GetAllTasksAsync(bool? isCompleted, int? priority);
         Task<TaskItem> GetTaskByIdAsync(string id);
         Task CreateTaskAsync(TaskDto task);
         Task UpdateTaskAsync(string id, TaskUpdateDto task);
         Task DeleteTaskAsync(string id);
-        Task<IEnumerable<TaskItem>> GetByCompletionStatusAsync(bool completed);
-        Task<IEnumerable<TaskItem>> GetByPriorityAsync(int priority);
     }
 }

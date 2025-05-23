@@ -19,8 +19,11 @@ namespace AgendaTarefas.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<TaskItem>> Get() =>
-            await _service.GetAllTasksAsync();
+        public async Task<IEnumerable<TaskItem>> Get([FromQuery] bool? completed, [FromQuery] int? priority)
+        {
+            return await _service.GetAllTasksAsync(completed, priority);
+        }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<TaskItem>> Get(string id)
@@ -49,13 +52,5 @@ namespace AgendaTarefas.Controllers
             await _service.DeleteTaskAsync(id);
             return NoContent();
         }
-
-        [HttpGet("filter/status/{completed}")]
-        public async Task<IEnumerable<TaskItem>> FilterByStatus(bool completed) =>
-            await _service.GetByCompletionStatusAsync(completed);
-
-        [HttpGet("filter/priority/{priority}")]
-        public async Task<IEnumerable<TaskItem>> FilterByPriority(int priority) =>
-            await _service.GetByPriorityAsync(priority);
     }
 }

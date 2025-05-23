@@ -13,8 +13,13 @@ namespace AgendaTarefas.Services
     {
         private readonly ITaskRepository _repository = repository;
 
-        public async Task<IEnumerable<TaskItem>> GetAllTasksAsync() =>
-            await _repository.GetAllAsync();
+        public async Task<IEnumerable<TaskItem>> GetAllTasksAsync(bool? isCompleted, int? priority)
+        {
+            if (priority.HasValue && !Enum.IsDefined(typeof(PriorityLevel), priority.Value))
+                throw new ArgumentException("Invalid priority value.");
+
+            return await _repository.GetAllAsync(isCompleted, priority);
+        }
 
         public async Task<TaskItem> GetTaskByIdAsync(string id) =>
             await _repository.GetByIdAsync(id);
@@ -23,7 +28,6 @@ namespace AgendaTarefas.Services
         {
             var task = new TaskItem
             {
-                Id = Guid.NewGuid().ToString(),
                 Title = taskDto.Title,
                 Description = taskDto.Description,
                 Priority = taskDto.Priority,
@@ -63,11 +67,5 @@ namespace AgendaTarefas.Services
 
         public async Task DeleteTaskAsync(string id) =>
             await _repository.DeleteAsync(id);
-
-        public async Task<IEnumerable<TaskItem>> GetByCompletionStatusAsync(bool completed) =>
-            await _repository.FilterByCompletionAsync(completed);
-
-        public async Task<IEnumerable<TaskItem>> GetByPriorityAsync(int priority) =>
-            await _repository.FilterByPriorityAsync(priority);
     }
 }
