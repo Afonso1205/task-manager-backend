@@ -27,8 +27,15 @@ namespace AgendaTarefas
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<ITaskService, TaskService>();
 
-            services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend",
+                    builder => builder.WithOrigins("http://localhost:4200")
+                                    .AllowAnyMethod()
+                                    .AllowAnyHeader());
+            });
 
+            services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Task API", Version = "v1" });
@@ -47,6 +54,9 @@ namespace AgendaTarefas
             });
 
             app.UseRouting();
+
+            app.UseCors("AllowFrontend");
+
             app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
