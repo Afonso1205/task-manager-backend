@@ -1,4 +1,8 @@
-using AgendaTarefas.Models;
+using AgendaTarefas.Data;
+using AgendaTarefas.Repositories;
+using AgendaTarefas.Repositories.Interfaces;
+using AgendaTarefas.Services;
+using AgendaTarefas.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,55 +23,32 @@ namespace AgendaTarefas
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // Registra MongoContext como singleton
             services.AddSingleton<MongoContext>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddScoped<ITaskService, TaskService>();
 
-            services.AddControllersWithViews();
+            services.AddControllers();
 
-            // Adiciona Swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = "Agenda de Tarefas API",
-                    Version = "v1"
-                });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Task API", Version = "v1" });
             });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
 
-                // Habilita Swagger em modo de desenvolvimento
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Agenda de Tarefas API v1");
-                    c.RoutePrefix = string.Empty; // Abre no root
-                });
-            }
-            else
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Task API V1");
+            });
 
             app.UseRouting();
-
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Tarefas}/{action=Index}/{id?}");
-            });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }
