@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AgendaTarefas.Controllers.DTOs;
 using AgendaTarefas.Models;
 using AgendaTarefas.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -29,14 +30,14 @@ namespace AgendaTarefas.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(TaskItem task)
+        public async Task<IActionResult> Post(TaskDto task)
         {
             await _service.CreateTaskAsync(task);
-            return CreatedAtAction(nameof(Get), new { id = task.Id }, task);
+            return CreatedAtAction(nameof(Get), task);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(string id, TaskItem task)
+        public async Task<IActionResult> Put(string id, TaskUpdateDto task)
         {
             await _service.UpdateTaskAsync(id, task);
             return NoContent();
