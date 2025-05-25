@@ -15,5 +15,7 @@ namespace AgendaTarefas.Data
         }
 
         public IMongoCollection<TaskItem> Tasks => _database.GetCollection<TaskItem>("Tasks");
+        public IMongoCollection<UserModel> Users => _database.GetCollection<UserModel>("Users");
+
     }
 }

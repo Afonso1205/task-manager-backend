@@ -1,12 +1,14 @@
 ﻿using AgendaTarefas.Controllers.DTOs;
 using AgendaTarefas.Models;
 using AgendaTarefas.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AgendaTarefas.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TasksController : ControllerBase
